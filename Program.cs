@@ -84,7 +84,6 @@ class Program
                     break;
                 case "2":
                     Console.WriteLine("Viser givere...");
-                    ShowDonors(donors);
                     break;
                 case "3":
                     Console.WriteLine("Legger til giver...");

@@ -2,63 +2,61 @@
 
 class Program
 {
-
-
     class Patient
     {
         public string Name { get; set; }
-        public int Kidneys { get; set; } // liczba nerek pacjenta
+        public int Nyrer { get; set; } // liczba nerek pacjenta
 
-        public Patient(string name, int kidneys)
+        public Patient(string name, int nyrer)
         {
             Name = name;
-            Kidneys = kidneys;
+            Nyrer = nyrer;
         }
 
         public void PrintInfo()
         {
-            Console.WriteLine($"Pacjent: {Name}, Nerki: {Kidneys}");
+            Console.WriteLine($"Pacjent: {Name}, Nerki: {Nyrer}");
         }
     }
 
     class Donor
     {
         public string Name { get; set; }
-        public int Kidneys { get; set; }
+        public int Nyrer { get; set; }
 
-        public Donor(string name, int kidneys)
+        public Donor(string name, int nyrer)
         {
             Name = name;
-            Kidneys = kidneys;
+            Nyrer = nyrer;
         }
 
         public void PrintInfo()
         {
-            Console.WriteLine($"Dawca: {Name}, Nerki: {Kidneys}");
+            Console.WriteLine($"Dawca: {Name}, Nerki: {Nyrer}");
         }
     }
 
+    static List<Donor> donors = new List<Donor>(); // Moved donors list to a static field
 
     static void Main(string[] args)
     {
         List<Patient> patients = new List<Patient>
-{
-    new Patient("Ola Nordmann", 1),
-    new Patient("Per Hansen", 2),
-    new Patient("Kari Nordmann", 3),
-    new Patient("Lise Jensen", 4),
-    new Patient("Knut Olsen", 5)
-};
-        List<Donor> donors = new List<Donor>
-{
-    new Donor("Anna Berg", 1),
-    new Donor("Bjørn Eriksen", 2),
-    new Donor("Cecilie Larsen", 3),
-    new Donor("David Nilsen", 4),
-    new Donor("Eva Solberg", 5)
-};
+        {
+            new Patient("Ola Nordmann", 1),
+            new Patient("Per Hansen", 2),
+            new Patient("Kari Nordmann", 3),
+            new Patient("Lise Jensen", 4),
+            new Patient("Knut Olsen", 5)
+        };
 
-
+        donors = new List<Donor> // Initialize donors list
+        {
+            new Donor("Anna Berg", 1),
+            new Donor("Bjørn Eriksen", 2),
+            new Donor("Cecilie Larsen", 3),
+            new Donor("David Nilsen", 4),
+            new Donor("Eva Solberg", 5)
+        };
 
         while (true)
         {
@@ -73,7 +71,6 @@ class Program
             string choice = Console.ReadLine(); // Read user input
 
             if (choice == "0")
-
                 break;
 
             switch (choice)
@@ -84,10 +81,11 @@ class Program
                     break;
                 case "2":
                     Console.WriteLine("Viser givere...");
+                    ShowDonors(donors);
                     break;
                 case "3":
                     Console.WriteLine("Legger til giver...");
-                    //AddDonor();
+                    AddDonor();
                     break;
                 case "4":
                     Console.WriteLine("Utfører transplantasjon...");
@@ -96,17 +94,13 @@ class Program
                 default:
                     Console.WriteLine("Ugyldig valg, prøv igjen.");
                     break;
-
             }
-
         }
-
     }
 
- 
     static void ShowPatients(List<Patient> patients)
     {
-        Console.WriteLine("\nLista pacjentów:");
+        Console.WriteLine("\nPasientliste:");
         for (int i = 0; i < patients.Count; i++)
         {
             Console.Write($"{i}: ");
@@ -116,7 +110,7 @@ class Program
 
     static void ShowDonors(List<Donor> donors)
     {
-        Console.WriteLine("\nLista dawców:");
+        Console.WriteLine("\nDonorliste:");
         for (int i = 0; i < donors.Count; i++)
         {
             Console.Write($"{i}: ");
@@ -124,5 +118,25 @@ class Program
         }
     }
 
+    static void AddDonor()
+    {
+        Console.Write("Podaj imię dawcy: ");
+        string name = Console.ReadLine();
+
+        if (string.IsNullOrWhiteSpace(name)) // Handle null or empty input
+        {
+            Console.WriteLine("Imię dawcy nie może być puste.");
+            return;
+        }
+
+        int nyrer;
+        do
+        {
+            Console.Write("Podaj liczbę nerek dawcy (minimum 1): ");
+        } while (!int.TryParse(Console.ReadLine(), out nyrer) || nyrer < 1);
+
+        donors.Add(new Donor(name, nyrer));
+        Console.WriteLine($"Dawca {name} dodany z {nyrer} nerkami.");
+    }
 }
 

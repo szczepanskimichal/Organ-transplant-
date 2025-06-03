@@ -89,7 +89,7 @@ class Program
                     break;
                 case "4":
                     Console.WriteLine("Utfører transplantasjon...");
-                    //Transplant();
+                    Transplant(patients, donors);
                     break;
                 default:
                     Console.WriteLine("Ugyldig valg, prøv igjen.");
@@ -138,5 +138,46 @@ class Program
         donors.Add(new Donor(name, nyrer));
         Console.WriteLine($"Dawca {name} dodany z {nyrer} nerkami.");
     }
+    static void Transplant(List<Patient> patients, List<Donor> donors)
+    {
+        Console.WriteLine("\nWybierz pacjenta:");
+        ShowPatients(patients);
+        if (!int.TryParse(Console.ReadLine(), out int patientIndex) || patientIndex < 0 || patientIndex >= patients.Count)
+        {
+            Console.WriteLine("Niepoprawny wybór pacjenta.");
+            return;
+        }
+        Patient patient = patients[patientIndex];
+
+        Console.WriteLine("Wybierz dawce:");
+        ShowDonors(donors);
+        if (!int.TryParse(Console.ReadLine(), out int donorIndex) || donorIndex < 0 || donorIndex >= donors.Count)
+        {
+            Console.WriteLine("Niepoprawny wybór dawcy.");
+            return;
+        }
+        Donor donor = donors[donorIndex];
+
+        if (donor.Nyrer <= 1)
+        {
+            Console.WriteLine($"Dawca {donor.Name} nie ma wystarczającej liczby nerek do oddania.");
+            return;
+        }
+
+        if (patient.Nyrer >= 2)
+        {
+            Console.WriteLine($"Pacjent {patient.Name} nie potrzebuje przeszczepu.");
+            return;
+        }
+
+        // Przeszczep
+        donor.Nyrer -= 1;
+        patient.Nyrer += 1;
+
+        Console.WriteLine($"Przeszczep zakończony sukcesem!");
+        Console.WriteLine($"{patient.Name} ma teraz {patient.Nyrer} nerki.");
+        Console.WriteLine($"{donor.Name} ma teraz {donor.Nyrer} nerki.");
+    }
+
 }
 
